@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:offerzhub/features/offers/presentation/offers_page.dart';
+import 'package:offerzhub/features/rewards/rewards_page.dart';
 import 'package:offerzhub/utlis/profile_page.dart';
 import 'package:toast/toast.dart';
 
@@ -19,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   final List listOfScreens = [
     // RewardsPage(),
     const OffersPage(),
+    const RewardsPage(),
     const ProfilePage()
   ];
 
@@ -66,11 +68,20 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   GButton(
+                    icon: Icons.discount_rounded,
+                    text: ' share offers',
+                    onPressed: () {
+                      setState(() {
+                        currentScreen.value = 1;
+                      });
+                    },
+                  ),
+                  GButton(
                     icon: Icons.person_2_rounded,
                     text: ' Profile',
                     onPressed: () {
                       setState(() {
-                        currentScreen.value = 1;
+                        currentScreen.value = 2;
                       });
                     },
                   ),
