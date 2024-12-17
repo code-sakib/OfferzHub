@@ -53,10 +53,18 @@ class OffersApi {
       });
     });
 
-    return listOfOffers;
-  }
+    // //getting mUsers and saving to List
+    // await firestore
+    //     .collection('offers')
+    //     .doc('companyUploaded')
+    //     .get()
+    //     .then((value) {
+    //   value.data()?.forEach((key, u) {
+    //     final user = UserModel.fromApi(u);
+    //     listOfUsers.add(user);
+    //   });
+    // });
 
-  Future<List<UserModel>> getUsers() async {
-    return listOfUsers;
+    return listOfOffers;
   }
 }

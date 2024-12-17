@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 GlobalKey<ScaffoldState> drawerKey = GlobalKey<ScaffoldState>();
 
 class _HomePageState extends State<HomePage> {
-  final List<Widget> listOfScreens = [
+  final List listOfScreens = [
     // RewardsPage(),
     const OffersPage(),
     const ProfilePage()

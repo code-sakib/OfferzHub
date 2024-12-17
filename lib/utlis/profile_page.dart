@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:offerzhub/core/globals.dart';
 import 'package:offerzhub/features/auth/auth_ui.dart';
+import 'package:offerzhub/home_page.dart';
 import 'package:offerzhub/utlis/screen_sizes.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -19,7 +21,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final height = sizes(context).height;
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -29,17 +30,35 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Center(
-                    child: Image.asset(
-                  auth.currentUser?.photoURL ?? 'assets/profile/general.png',
-                  height: height / 5,
-                )),
+                    child: !isGuest
+                        ? Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    spreadRadius: 4,
+                                    blurRadius: 4,
+                                  )
+                                ]),
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                '${auth.currentUser?.photoURL}',
+                              ),
+                              radius: sizes(context).width / 7,
+                            ),
+                          )
+                        : const Icon(
+                            Icons.person_2_rounded,
+                            size: 150,
+                          )),
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
                         Text(
-                          'User:                    ${auth.currentUser?.displayName ?? 'Astranaut'}',
+                          'User:                    ${auth.currentUser?.displayName ?? 'GuestUser'}',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const Icon(
@@ -131,8 +150,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 OutlinedButton(
                     onPressed: () {
                       isGuest = false;
-                      GoogleSignIn().signOut();
                       auth.signOut();
+                      GoogleSignIn().signOut();
+                      context.goNamed('auth');
+                      currentScreen.value = 0;
                     },
                     child: const Text("Logout"))
               ],

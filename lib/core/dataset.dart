@@ -1,8 +1,5 @@
-
-import 'package:offerzhub/features/offers/domain/offers_model.dart';
-
 abstract class DataState<T> {
-  final List<OffersModel>? data;
+  final T? data;
   final String? error;
 
   const DataState({this.data, this.error});

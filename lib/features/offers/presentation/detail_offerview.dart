@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:offerzhub/features/offers/data/offers/get_offers_api.dart';
 import 'package:offerzhub/features/offers/domain/offers_model.dart';
 import 'package:offerzhub/utlis/random_select.dart';
@@ -28,6 +29,10 @@ class DetailedOfferView extends StatelessWidget {
               stretch: true,
               floating: true,
               expandedHeight: 200,
+              forceMaterialTransparency: true,
+              leading: IconButton(
+                  onPressed: () => context.pop(),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded)),
               flexibleSpace: FlexibleSpaceBar(
                 background: Image.network(
                   'https://www.shareicon.net/data/512x512/2015/11/01/665107_people_512x512.png',
@@ -114,27 +119,31 @@ class DetailedOfferView extends StatelessWidget {
             }, childCount: 1)),
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-              final UserModel user = listOfUsers[index];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                        radius: 25,
-                        backgroundImage: user.dp != null
-                            ? NetworkImage(
-                                user.dp!,
-                              )
-                            : null,
-                        child: user.dp == null
-                            ? Text(user.name[0].toUpperCase())
-                            : null),
-                    title: Text(user.name),
-                    subtitle: Text(randomSubtitle()),
+              final UserModel user =
+                  UserModel.fromApi(offersModel.interestedUsers?[index]);
+              return GestureDetector(
+                onTap: () => context.pushNamed('chat', extra: user),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: ListTile(
+                      leading: CircleAvatar(
+                          radius: 25,
+                          backgroundImage: user.dp != null
+                              ? NetworkImage(
+                                  user.dp!,
+                                )
+                              : null,
+                          child: user.dp == null
+                              ? Text(user.name[0].toUpperCase())
+                              : null),
+                      title: Text(user.name),
+                      subtitle: Text(randomSubtitle()),
+                    ),
                   ),
                 ),
               );
-            }, childCount: listOfUsers.length)),
+            }, childCount: offersModel.interestedUsers?.length ?? 0)),
           ],
         ),
       ),

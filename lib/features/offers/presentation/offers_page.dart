@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:offerzhub/core/dataset.dart';
@@ -74,12 +75,7 @@ class _OffersPageState extends State<OffersPage> {
         );
       } else if (model.currentState.runtimeType == DataLoading) {
         return const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation(
-              Color(0xFF7255AF),
-            ),
-            strokeWidth: 5,
-          ),
+          child: CupertinoActivityIndicator(),
         );
       } else if (model.currentState.runtimeType == DataFailed) {
         return Center(
@@ -103,7 +99,6 @@ Widget offersListViewBuilder(int count, List<OffersModel> modelList) {
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
           child: Card(
             elevation: 10,
-            shadowColor: const Color(0xFFA37AFC),
             child: index == 3
                 ? const CurrentCarousel()
                 : GestureDetector(
@@ -112,15 +107,16 @@ Widget offersListViewBuilder(int count, List<OffersModel> modelList) {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: sizes(context).height / 4,
-                          width: sizes(context).width / 4,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              'https://www.shareicon.net/data/512x512/2015/11/01/665107_people_512x512.png',
-                              fit: BoxFit.contain,
-                            ),
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            bottomLeft: Radius.circular(12),
+                          ),
+                          child: Image.network(
+                            offerModel.img,
+                            height: sizes(context).height / 6,
+                            width: sizes(context).width / 4,
+                            fit: BoxFit.fill,
                           ),
                         ),
                         Expanded(
@@ -129,16 +125,7 @@ Widget offersListViewBuilder(int count, List<OffersModel> modelList) {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(offerModel.brand,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(fontWeight: FontWeight.bold)),
-                                ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Image.network(
-                                      offerModel.img,
-                                      height: 50,
-                                    )),
+                                    style: const TextStyle(fontSize: 18)),
                               ],
                             ),
                             subtitle: Column(
@@ -157,12 +144,8 @@ Widget offersListViewBuilder(int count, List<OffersModel> modelList) {
                                       children: [
                                         Text(offerModel.uploader ?? '',
                                             softWrap: true,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelSmall!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.w200,
-                                                )),
+                                            style:
+                                                const TextStyle(fontSize: 12)),
                                         const Icon(
                                           Icons.verified_rounded,
                                           color: Colors.blue,
@@ -191,15 +174,11 @@ Widget offersListViewBuilder(int count, List<OffersModel> modelList) {
                                             fontWeight: FontWeight.w200,
                                           )),
                                 ),
-                                Row(
-                                  children: [
-                                    TextButton(
-                                        onPressed: () {
-                                          launchUrlFunc(offerModel.checkOffer);
-                                        },
-                                        child: const Text('check offer')),
-                                  ],
-                                )
+                                TextButton(
+                                    onPressed: () {
+                                      launchUrlFunc(offerModel.checkOffer);
+                                    },
+                                    child: const Text('check offer'))
                               ],
                             ),
                           ),
