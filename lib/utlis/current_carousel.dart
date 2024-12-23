@@ -34,24 +34,6 @@ class CurrentCarousel extends StatefulWidget {
 class _CurrentCarouselState extends State<CurrentCarousel> {
   final pageController = PageController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     // Access page after the first frame to avoid errors
-  //     if (pageController.hasClients) {
-  //       while (true) {
-  //         if (pageController.page! == 4) {
-  //           break;
-  //         } else {
-  //           pageController.nextPage(
-  //               duration: Duration(seconds: 2), curve: Curves.ease);
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Padding(

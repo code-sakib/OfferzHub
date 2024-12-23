@@ -18,10 +18,9 @@ GlobalKey<ScaffoldState> drawerKey = GlobalKey<ScaffoldState>();
 
 class _HomePageState extends State<HomePage> {
   final List listOfScreens = [
-    // RewardsPage(),
     const OffersPage(),
     const RewardsPage(),
-    const ProfilePage()
+    const ProfilePage2()
   ];
 
   @override
@@ -49,18 +48,9 @@ class _HomePageState extends State<HomePage> {
                 tabBackgroundColor: Colors.grey.shade800,
                 padding: const EdgeInsets.all(15),
                 tabs: [
-                  // GButton(
-                  //   icon: Icons.discount_rounded,
-                  //   text: ' share rewards',
-                  //   onPressed: () {
-                  //     setState(() {
-                  //       currentScreen.value = 0;
-                  //     });
-                  //   },
-                  // ),
                   GButton(
                     icon: Icons.diversity_1_rounded,
-                    text: ' share offers',
+                    text: ' Offers',
                     onPressed: () {
                       setState(() {
                         currentScreen.value = 0;
@@ -69,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   GButton(
                     icon: Icons.discount_rounded,
-                    text: ' share offers',
+                    text: ' Rewards',
                     onPressed: () {
                       setState(() {
                         currentScreen.value = 1;

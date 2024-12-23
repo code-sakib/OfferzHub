@@ -1,21 +1,25 @@
+import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:offerzhub/core/globals.dart';
 import 'package:offerzhub/utlis/snackbar.dart';
 
+
+
 class UserLocation {
   static Future<void> determinePosition() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    final locationPermission = await Geolocator.checkPermission();
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    LocationPermission locationPermission = await Geolocator.checkPermission();
 
     if (!serviceEnabled || locationPermission == LocationPermission.denied) {
-      await Geolocator.requestPermission();
+      locationPermission = await Geolocator.requestPermission();
     }
     if (locationPermission == LocationPermission.denied ||
         locationPermission == LocationPermission.deniedForever) {
-      AppSnackBar.showSnackBar(
-          'Enable location permission for personalised experience😐',
-          colorGreen: false);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) =>
+          AppSnackBar.showSnackBar(
+              'Enable location permission for personalised experience😐',
+              colorGreen: false));
     }
 
     if (locationPermission == LocationPermission.always ||

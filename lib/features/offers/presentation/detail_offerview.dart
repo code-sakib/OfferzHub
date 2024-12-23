@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icons_launcher/utils/utils.dart';
 import 'package:offerzhub/features/offers/data/offers/get_offers_api.dart';
 import 'package:offerzhub/features/offers/domain/offers_model.dart';
 import 'package:offerzhub/utlis/random_select.dart';
@@ -127,16 +128,7 @@ class DetailedOfferView extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     child: ListTile(
-                      leading: CircleAvatar(
-                          radius: 25,
-                          backgroundImage: user.dp != null
-                              ? NetworkImage(
-                                  user.dp!,
-                                )
-                              : null,
-                          child: user.dp == null
-                              ? Text(user.name[0].toUpperCase())
-                              : null),
+                      leading: UserImgFetching(user: user),
                       title: Text(user.name),
                       subtitle: Text(randomSubtitle()),
                     ),
@@ -160,5 +152,64 @@ class DetailedOfferView extends StatelessWidget {
         ),
       ),
     ));
+  }
+}
+
+ImageProvider _getImage(String imgLink) {
+  try {
+    return NetworkImage(
+      imgLink,
+    );
+  } catch (e) {
+    return const NetworkImage(
+      'https://firebasestorage.googleapis.com/v0/b/offershub-5e52e.appspot.com/o/og_offerzhub_assets%2Fassets%2Fdefault_img.png?alt=media&token=8039d4da-8753-499f-8270-e7e94dea8202',
+    );
+  }
+}
+
+class UserImgFetching extends StatefulWidget {
+  const UserImgFetching({super.key, required this.user});
+
+  final UserModel user;
+
+  @override
+  _UserImgFetchingState createState() => _UserImgFetchingState();
+}
+
+class _UserImgFetchingState extends State<UserImgFetching> {
+  final String fallbackImageUrl =
+      'https://cdn-icons-png.flaticon.com/512/2815/2815428.png'; // Fallback image URL
+
+  String currentImageUrl = ''; // Holds the URL to display
+
+  static late bool isImgNull;
+
+  @override
+  void initState() {
+    super.initState();
+    isImgNull = widget.user.dp == null;
+
+    if (isImgNull) return;
+
+    currentImageUrl = widget.user.dp!; // Start with the primary image URL
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return !isImgNull
+        ? CircleAvatar(
+            radius: 25,
+            backgroundImage: NetworkImage(currentImageUrl),
+            onBackgroundImageError: (error, stackTrace) {
+              // Switch to fallback URL if primary image fails
+              setState(() {
+                currentImageUrl = fallbackImageUrl;
+              });
+            },
+          )
+        : CircleAvatar(
+            radius: 25,
+            child: Text(widget.user.name[0].toUpperCase()),
+          );
   }
 }

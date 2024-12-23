@@ -107,7 +107,7 @@ class _ChatScreenState extends State<ChatScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(widget.user.name),
-                _getUserStatusWidget(widget.user, showTyping.value)
+                _getUserStatusWidget(widget.user, showTyping) ?? Text('data')
               ],
             ),
           ],
@@ -156,6 +156,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           setCurrentStatus('typing..');
                           scrollDown();
                         } else {
+                          showTyping.value = false;
                           setCurrentStatus('online');
                         }
                       },
@@ -275,16 +276,17 @@ Widget chatBubble(String message, String time, bool isCurrentUser) {
 }
 
 //getting whether user is online offline or typing
-Widget _getUserStatusWidget(UserModel otherUser, bool showTyping) {
+StreamBuilder? _getUserStatusWidget(
+    UserModel otherUser, ValueNotifier showTyping) {
   return StreamBuilder(
     stream: ChatScreen._chatService
         .getCurrentStatus(currentUser.uid, otherUser.uID),
     builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.done &&
+      if (snapshot.connectionState == ConnectionState.active &&
           snapshot.hasData) {
         String text;
         try {
-          text = snapshot.data!.get("usersCurrentStatus.${otherUser.uID}");
+          text = snapshot.data.get("usersCurrentStatus.${otherUser.uID}");
         } catch (e) {
           text = 'offline';
         }
@@ -296,17 +298,18 @@ Widget _getUserStatusWidget(UserModel otherUser, bool showTyping) {
               style: const TextStyle(fontSize: 10, color: Colors.green),
             );
           case 'typing..':
-            showTyping = true;
-            return AnimatedTextKit(repeatForever: true, animatedTexts: [
-              TyperAnimatedText(text,
-                  textStyle: const TextStyle(fontSize: 10, color: Colors.green),
-                  speed: const Duration(milliseconds: 200))
-            ]);
-          default:
+            WidgetsBinding.instance
+                .addPostFrameCallback((timeStamp) => showTyping.value = true);
             return const Text(
-              'offline',
+              'online',
+              style: TextStyle(fontSize: 10, color: Colors.green),
             );
         }
+      } else if (snapshot.connectionState == ConnectionState.waiting) {
+        const Text(
+          'loading',
+          style: TextStyle(fontSize: 10, color: Colors.grey),
+        );
       }
       return const Text(
         'offline',

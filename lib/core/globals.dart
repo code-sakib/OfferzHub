@@ -18,4 +18,7 @@ final getIt = GetIt.instance;
 //showIntro
 bool? toShowOnBoarding;
 
+
+//location services
 late final String? userAdd;
+late final bool serviceEnabled;
